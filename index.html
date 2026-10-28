@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Os bichos da Duna Menina</title>
+<meta name="description" content="Seminário da Izadora: os bichos do livro Duna Menina e o Elo com a Natureza.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2B1B3D; --paper:#FFF8F0; --red:#C23B3B; --purple:#6A3FA0; --blue:#3E4DA8;
+  --display:"Gochi Hand","Segoe Print","Comic Sans MS",cursive;
+  --body:"Patrick Hand","Segoe Print","Comic Sans MS",cursive;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#2B1B3D;overflow:hidden;font-family:var(--body);color:var(--ink);-webkit-tap-highlight-color:transparent}
+#viewport{position:fixed;inset:0 0 68px 0}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;overflow:hidden;border-radius:18px;background:#000}
+
+/* ---------- slides ---------- */
+.slide{position:absolute;inset:0;opacity:0;visibility:hidden;transform:translateX(70px);transition:opacity .45s,transform .45s,visibility 0s .45s;overflow:hidden;
+  background:linear-gradient(160deg,var(--bg1),var(--bg2))}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s,transform .45s}
+.slide.past{transform:translateX(-70px)}
+.slide>*{position:relative;z-index:2}
+.slide>.leaf,.slide>.star{position:absolute;z-index:0}
+[data-theme=coral]{--bg1:#F8B9A4;--bg2:#EE8E7B}
+[data-theme=cream]{--bg1:#FFFaf3;--bg2:#F6E6D6}
+[data-theme=sky]{--bg1:#D8EEF6;--bg2:#9CCBE4}
+[data-theme=peach]{--bg1:#F8C3AB;--bg2:#EF9B86}
+[data-theme=sunset]{--bg1:#F9D08F;--bg2:#EE7B5F}
+[data-theme=night]{--bg1:#2E2760;--bg2:#14112E}
+[data-theme=pink]{--bg1:#FAD0D8;--bg2:#F2A3B5}
+[data-theme=sea]{--bg1:#BDE7E2;--bg2:#3E9FB8}
+
+.paper{background:var(--paper);border-radius:30px;box-shadow:0 8px 0 rgba(43,27,61,.16)}
+.rv{opacity:0;transform:translateY(26px) scale(.94);transition:opacity .45s,transform .6s cubic-bezier(.2,1.5,.4,1)}
+.rv.on{opacity:1;transform:none}
+
+/* leaves + stars */
+.leaf{animation:sway 6s ease-in-out infinite alternate;transform-origin:50% 100%}
+.leaf svg{width:100%;height:100%;display:block}
+@keyframes sway{from{transform:rotate(calc(var(--r) - 6deg))}to{transform:rotate(calc(var(--r) + 6deg))}}
+.star{color:#FFE9A8;animation:twinkle 2.6s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.15)}}
+
+/* ---------- titles ---------- */
+.title{font-family:var(--display);font-weight:400;margin:0;line-height:1}
+.chip{display:inline-block;font-size:44px;color:#fff;background:var(--c,#6A3FA0);border-radius:999px;padding:8px 30px 10px;box-shadow:0 6px 0 rgba(43,27,61,.2)}
+.chip b{font-family:var(--display);font-weight:400;font-size:1.18em;letter-spacing:1px}
+
+/* ---------- animal slides ---------- */
+.animal .art-wrap{position:absolute;left:30px;top:34px;width:580px;height:580px}
+.animal .ring{position:absolute;inset:0;border-radius:50%;background:rgba(255,248,240,.78);box-shadow:inset 0 0 0 10px rgba(255,255,255,.55),0 12px 0 rgba(43,27,61,.14)}
+[data-theme=night] .ring{background:#DCD4F6}
+.animal .art{position:absolute;inset:26px}
+.slide.active .art{animation:popIn .9s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes popIn{from{transform:scale(.3) rotate(-12deg);opacity:0}to{transform:none;opacity:1}}
+.animal .info{position:absolute;left:640px;top:36px;width:610px;display:flex;flex-direction:column;gap:16px;align-items:flex-start}
+.animal .title{font-size:96px;padding:6px 36px 14px;background:var(--paper);border-radius:32px;box-shadow:0 8px 0 rgba(43,27,61,.16)}
+.animal .title small{font-size:.4em;color:var(--purple);font-family:var(--body)}
+.facts{padding:18px 28px;width:100%}
+.facts p{margin:6px 0;font-size:34px;line-height:1.15;display:flex;gap:14px;align-items:center}
+.fun{padding:18px 28px;width:100%;font-size:35px;line-height:1.15;display:flex;gap:16px;align-items:center;background:#FFF1BF}
+.fun p{margin:0}
+.ic{font-size:42px;flex:none}
+.book{position:absolute!important;left:40px;right:40px;bottom:22px;height:70px;display:flex;align-items:center;gap:14px;padding:0 30px;font-size:31px;z-index:3}
+.book span{font-size:36px}
+
+/* art svg */
+.svgart{width:100%;height:100%;overflow:visible;display:block}
+.svgart [class]{transform-box:fill-box}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes wag{from{transform:rotate(-10deg)}to{transform:rotate(14deg)}}
+@keyframes lzdash{0%,30%{transform:translateX(0)}38%,62%{transform:translateX(48px)}70%,100%{transform:translateX(0)}}
+@keyframes flick{0%,78%,100%{opacity:0}84%,94%{opacity:1}}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.08)}}
+@keyframes tilt{0%,18%,100%{transform:rotate(0)}28%,48%{transform:rotate(-10deg)}58%,78%{transform:rotate(10deg)}}
+@keyframes swing{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+@keyframes twitch{0%,80%,100%{transform:scale(1)}86%{transform:scale(1.35)}92%{transform:scale(1)}}
+@keyframes legs{from{transform:skewX(-14deg)}to{transform:skewX(14deg)}}
+@keyframes trail{to{stroke-dashoffset:-56}}
+@keyframes wobble{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
+@keyframes flap{from{transform:rotate(-22deg)}to{transform:rotate(14deg)}}
+@keyframes flapw{from{transform:scaleX(1)}to{transform:scaleX(.3)}}
+@keyframes float{0%,100%{transform:translate(0,0) rotate(-3deg)}50%{transform:translate(10px,-14px) rotate(4deg)}}
+@keyframes wave{from{transform:rotate(-10deg)}to{transform:rotate(22deg)}}
+
+.lz-all{animation:lzdash 5s ease-in-out infinite}
+.lz-tail{transform-origin:100% 40%;animation:wag .45s ease-in-out infinite alternate}
+.lz-tongue{animation:flick 3s infinite}
+.ow-eyes{transform-origin:50% 50%;animation:blink 4.5s infinite}
+.ow-head{transform-origin:50% 92%;animation:tilt 6s ease-in-out infinite}
+.sg-all{transform-origin:50% 100%;animation:swing 2.2s ease-in-out infinite alternate}
+.sg-tail{transform-origin:0% 100%;animation:wag .9s ease-in-out infinite alternate}
+.tb-tail{transform-origin:0% 50%;animation:wag 1.1s ease-in-out infinite alternate}
+.tb-nose{animation:twitch 3s infinite}
+.tb-all{animation:bob 2.6s ease-in-out infinite}
+.an-ant{animation:bob .5s ease-in-out infinite}
+.an-legs{transform-origin:50% 50%;animation:legs .25s linear infinite alternate}
+.an-trail{animation:trail 1.2s linear infinite}
+.tt-all{transform-origin:50% 100%;animation:wobble .9s ease-in-out infinite alternate}
+.bf-all{animation:bob 1.1s ease-in-out infinite}
+.bf-wing{transform-origin:100% 100%;animation:flap .12s linear infinite alternate}
+.bt-all{animation:float 3.4s ease-in-out infinite}
+.bt-wl{transform-origin:100% 50%;animation:flapw .5s ease-in-out infinite alternate}
+.bt-wr{transform-origin:0% 50%;animation:flapw .5s ease-in-out infinite alternate}
+.dn-all{animation:bob 2.4s ease-in-out infinite}
+.dn-arm{transform-origin:0% 100%;animation:wave .7s ease-in-out infinite alternate}
+
+/* ---------- cover ---------- */
+.cover .kicker{position:absolute;left:70px;top:90px;font-size:50px}
+.cover .big{position:absolute;left:60px;top:150px;font-family:var(--display);font-size:200px;line-height:.9;color:var(--red);letter-spacing:4px;text-shadow:5px 6px 0 rgba(194,59,59,.18)}
+.cover .big span{display:block;font-size:130px;letter-spacing:16px;margin-top:6px}
+.cover .sub{position:absolute;left:70px;top:520px;font-size:38px;line-height:1.25}
+.cover .sub b{font-family:var(--display);font-weight:400;font-size:58px;color:var(--purple);display:block}
+.cover .duna{position:absolute;right:70px;top:110px;width:400px;height:560px}
+.cover .peek{position:absolute;width:150px;height:150px}
+.cover .bubble{position:absolute;left:640px;top:250px;width:210px;padding:16px 20px;font-size:34px;line-height:1.1;text-align:center;border-radius:28px;transform-origin:100% 100%;animation:bobble 3s ease-in-out infinite}
+.cover .bubble b{font-family:var(--display);font-weight:400;color:var(--red);font-size:1.25em}
+@keyframes bobble{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(2deg) translateY(-6px)}}
+
+/* ---------- slide 2 ---------- */
+.s2 .t1{position:absolute;left:70px;top:90px;width:760px;padding:34px 44px;font-size:62px;line-height:1.12}
+.s2 .t2{position:absolute;left:70px;top:380px;width:760px;padding:34px 44px;font-size:56px;line-height:1.12;background:#FFF1BF}
+.s2 .t1 b,.s2 .t2 b{font-family:var(--display);font-weight:400;color:var(--red)}
+.s2 .pals{position:absolute;right:30px;top:60px;width:400px;height:600px}
+.s2 .pals>div{position:absolute;width:190px;height:190px}
+
+/* ---------- slide 3 ---------- */
+.s3 .title{position:absolute;left:0;right:0;top:44px;text-align:center;font-size:92px}
+.s3 .title span{display:inline-block;background:var(--paper);padding:8px 44px 16px;border-radius:34px;box-shadow:0 8px 0 rgba(43,27,61,.16)}
+.s3 .line{position:absolute;left:0;right:0;top:176px;text-align:center;font-size:40px}
+.s3 .line span{background:#FFF1BF;padding:8px 30px;border-radius:999px}
+.s3 .row{position:absolute;left:30px;right:30px;top:270px;display:flex;justify-content:space-between}
+.s3 .mini{width:230px;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;transform:scale(.3)}
+.s3.active .mini{animation:popIn .8s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(var(--i)*.35s + .3s)}
+.s3 .mini .a{width:230px;height:230px;background:rgba(255,248,240,.8);border-radius:50%;padding:12px;box-shadow:0 8px 0 rgba(43,27,61,.14)}
+.s3 .mini p{margin:0;font-family:var(--display);font-size:46px;background:var(--paper);padding:2px 26px 8px;border-radius:999px}
+
+/* ---------- flip cards ---------- */
+.flip{border:0;padding:0;background:none;font:inherit;color:inherit;perspective:1000px;cursor:pointer}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px}
+.flip .b{transform:rotateY(180deg)}
+.flip:focus-visible{outline:5px solid #FFE9A8;outline-offset:6px;border-radius:30px}
+.flip{transition:transform .25s}
+.flip:hover{transform:translateY(-8px)}
+
+.quiz .title,.extras .title{position:absolute;left:0;right:0;top:40px;text-align:center;font-size:84px}
+.quiz .title span,.extras .title span{display:inline-block;background:var(--paper);padding:8px 44px 16px;border-radius:34px;box-shadow:0 8px 0 rgba(43,27,61,.16)}
+.quiz .hint,.extras .hint{position:absolute;left:0;right:0;top:162px;text-align:center;font-size:34px}
+.quiz .hint span,.extras .hint span{background:#FFF1BF;padding:6px 26px;border-radius:999px}
+.quiz .cards{position:absolute;left:34px;right:34px;top:236px;height:440px;display:flex;justify-content:space-between}
+.quiz .flip{width:228px;height:440px}
+.quiz .f{background:var(--paper);box-shadow:0 8px 0 rgba(43,27,61,.18);gap:18px}
+.quiz .f .q{font-family:var(--display);font-size:150px;line-height:1;color:var(--purple)}
+.quiz .f p{margin:0;font-size:31px;line-height:1.15}
+.quiz .b{background:#FFF1BF;box-shadow:0 8px 0 rgba(43,27,61,.18);gap:6px}
+.quiz .b .a{width:190px;height:190px}
+.quiz .b h3{margin:0;font-family:var(--display);font-weight:400;font-size:58px}
+.extras .title{font-size:66px}
+.extras .cards{position:absolute;left:100px;right:100px;top:236px;height:440px;display:flex;justify-content:space-between}
+.extras .flip{width:326px;height:440px}
+.extras .f{background:var(--paper);box-shadow:0 8px 0 rgba(43,27,61,.18);gap:6px}
+.extras .f .a{width:250px;height:250px}
+.extras .f h3{margin:0;font-family:var(--display);font-weight:400;font-size:64px}
+.extras .f small{font-size:28px;color:var(--purple)}
+.extras .b{background:#FFF1BF;box-shadow:0 8px 0 rgba(43,27,61,.18);gap:14px}
+.extras .b .chip{font-size:34px}
+.extras .b p{margin:0;font-size:36px;line-height:1.15}
+
+/* ---------- closing ---------- */
+.end .card{position:absolute;left:60px;top:50px;width:780px;padding:28px 44px;font-size:54px;line-height:1.12}
+.end .card b{font-family:var(--display);font-weight:400;color:var(--red)}
+.end .rules{position:absolute;left:60px;top:318px;width:780px;display:flex;flex-direction:column;gap:12px}
+.end .rules .chip{font-size:38px;background:var(--paper);color:var(--ink);padding:6px 30px 8px;border-radius:26px;box-shadow:0 6px 0 rgba(43,27,61,.18)}
+.end .thanks{position:absolute;left:60px;top:560px;width:780px;text-align:center;font-family:var(--display);font-size:118px;line-height:1;color:var(--paper);text-shadow:0 7px 0 rgba(43,27,61,.35)}
+.end .duna{position:absolute;right:50px;top:90px;width:360px;height:520px}
+.end .pal{position:absolute;width:150px;height:150px}
+.confetti{position:absolute;top:-60px;z-index:5;font-size:40px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(820px) rotate(540deg)}}
+
+/* ---------- control bar ---------- */
+#bar{position:fixed;left:0;right:0;bottom:0;height:68px;display:flex;align-items:center;justify-content:center;gap:14px;padding:0 12px;background:#1B1229}
+#bar{gap:clamp(6px,1.4vw,14px)}
+#bar button{white-space:nowrap;font:inherit;font-family:var(--body);font-size:clamp(20px,3.4vw,28px);line-height:1;color:#fff;background:#6A3FA0;border:0;border-radius:999px;min-width:clamp(44px,8vw,60px);height:clamp(42px,7vw,48px);padding:0 clamp(8px,2vw,20px);cursor:pointer;box-shadow:0 4px 0 #3a2060;flex:none}
+#bar{overflow:hidden}
+#bar.nodots #dots{display:none}
+#bar.nolbl #next .lbl{display:none}
+#bar.nolbl #next{padding:0 22px}
+#start{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:linear-gradient(160deg,#F8B9A4,#EE8E7B);transition:opacity .5s,visibility 0s .5s}
+#start.hide{opacity:0;visibility:hidden;pointer-events:none}
+#start .box{text-align:center;padding:20px}
+#start .t{font-family:var(--display);font-size:clamp(34px,7vw,72px);line-height:1.05;color:var(--ink);margin-bottom:26px}
+#start .t b{font-weight:400;color:var(--red)}
+#start #go{font-family:var(--display);font-size:clamp(32px,6vw,60px);color:#fff;background:#E0653F;border:0;border-radius:999px;padding:12px 48px 18px;cursor:pointer;box-shadow:0 8px 0 #8f3a20;animation:bob 1.6s ease-in-out infinite}
+#start #go:active{transform:translateY(5px);box-shadow:0 3px 0 #8f3a20}
+#start #go:focus-visible{outline:5px solid #FFE9A8;outline-offset:6px}
+#start .s{margin-top:24px;font-size:clamp(20px,3vw,30px);color:var(--ink)}
+#rot{display:none;position:fixed;left:8px;right:8px;top:8px;z-index:9;background:#FFF1BF;color:#2B1B3D;border-radius:16px;padding:8px 14px;font-size:18px;text-align:center;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+@media (orientation:portrait) and (max-width:700px){#rot{display:block}}
+#bar button:active{transform:translateY(3px);box-shadow:none}
+#bar button:focus-visible{outline:3px solid #FFE9A8}
+#bar #next{background:#E0653F;box-shadow:0 4px 0 #8f3a20;padding:0 clamp(14px,3vw,30px)}
+#bar #mus.off{background:#4a3a68;box-shadow:0 4px 0 #2c2142;opacity:.75}
+#bar #mus:not(.off){background:#2F9E6B;box-shadow:0 4px 0 #1b6a47}
+#dots{display:flex;gap:9px;align-items:center}
+#dots i{width:14px;height:14px;border-radius:50%;background:#5a4a78;cursor:pointer;transition:.25s}
+#dots i.on{background:#FFE9A8;transform:scale(1.35)}
+
+@media (prefers-reduced-motion:reduce){
+  .leaf,.star,.svgart *{animation:none!important}
+}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="stage">
+
+<!-- 1. CAPA -->
+<section class="slide cover" data-theme="cream" data-steps="0">
+  <div class="kicker title" style="position:absolute">OS BICHOS DA</div>
+  <div class="big">DUNA<span>MENINA</span></div>
+  <div class="sub">do livro de Gabriela Barbalho<b>Apresentação: Izadora</b></div>
+  <div class="duna" data-art="izadora"></div>
+  <div class="paper bubble">Oi! Eu sou a <b>Izadora</b>!</div>
+  <div class="peek" style="left:700px;top:560px;width:130px;height:130px" data-art="lagarto"></div>
+  <div class="peek" style="left:700px;top:30px;width:170px;height:170px" data-art="coruja"></div>
+</section>
+
+<!-- 2. FRASE -->
+<section class="slide s2" data-theme="coral" data-steps="1">
+  <div class="paper t1">Na natureza, <b>vivem muitos animais</b>.</div>
+  <div class="paper t2 rv" data-step="1">Cada um tem suas <b>características</b> e seu <b>papel</b> no ambiente.</div>
+  <div class="pals">
+    <div style="left:10px;top:0" data-art="sagui"></div>
+    <div style="left:200px;top:150px" data-art="coruja"></div>
+    <div style="left:0;top:210px" data-art="formiga"></div>
+    <div style="left:190px;top:390px" data-art="timbu"></div>
+  </div>
+</section>
+
+<!-- 3. QUEM APARECE -->
+<section class="slide s3" data-theme="sunset" data-steps="0">
+  <h2 class="title"><span>Quem aparece na história?</span></h2>
+  <div class="line"><span>Duna encontra 5 bichos pelo caminho!</span></div>
+  <div class="row">
+    <div class="mini" style="--i:0"><div class="a" data-art="lagarto"></div><p>Lagarto</p></div>
+    <div class="mini" style="--i:1"><div class="a" data-art="coruja"></div><p>Coruja</p></div>
+    <div class="mini" style="--i:2"><div class="a" data-art="sagui"></div><p>Sagui</p></div>
+    <div class="mini" style="--i:3"><div class="a" data-art="timbu"></div><p>Timbu</p></div>
+    <div class="mini" style="--i:4"><div class="a" data-art="formiga"></div><p>Formiga</p></div>
+  </div>
+</section>
+
+<!--ANIMAIS-->
+
+<!-- QUIZ -->
+<section class="slide quiz" data-theme="sky" data-steps="0">
+  <h2 class="title"><span>Quem sou eu?</span></h2>
+  <div class="hint"><span>Adivinhe! Depois clique no cartão.</span></div>
+  <div class="cards">
+    <button class="flip"><div class="in"><div class="f"><div class="q">?</div><p>Tenho 6 patinhas e ando em fila.</p></div><div class="b"><div class="a" data-art="formiga"></div><h3>Formiga</h3></div></div></button>
+    <button class="flip"><div class="in"><div class="f"><div class="q">?</div><p>Minha cauda cai e cresce de novo.</p></div><div class="b"><div class="a" data-art="lagarto"></div><h3>Lagarto</h3></div></div></button>
+    <button class="flip"><div class="in"><div class="f"><div class="q">?</div><p>Sou uma ave de olhos bem grandes.</p></div><div class="b"><div class="a" data-art="coruja"></div><h3>Coruja</h3></div></div></button>
+    <button class="flip"><div class="in"><div class="f"><div class="q">?</div><p>Tenho tufos brancos nas orelhas.</p></div><div class="b"><div class="a" data-art="sagui"></div><h3>Sagui</h3></div></div></button>
+    <button class="flip"><div class="in"><div class="f"><div class="q">?</div><p>Minha mamãe tem uma bolsinha na barriga.</p></div><div class="b"><div class="a" data-art="timbu"></div><h3>Timbu</h3></div></div></button>
+  </div>
+</section>
+
+<!-- EXTRAS -->
+<section class="slide extras" data-theme="pink" data-steps="0">
+  <h2 class="title"><span>Outros bichos do Parque das Dunas</span></h2>
+  <div class="hint"><span>Clique no cartão para descobrir!</span></div>
+  <div class="cards">
+    <button class="flip"><div class="in"><div class="f"><div class="a" data-art="tatu"></div><h3>Tatu-peba</h3><small>clique em mim</small></div><div class="b"><span class="chip" style="--c:#D2693E">MAMÍFERO</span><p>Tenho uma casca dura e cavo tocas na areia!</p></div></div></button>
+    <button class="flip"><div class="in"><div class="f"><div class="a" data-art="beijaflor"></div><h3>Beija-flor</h3><small>clique em mim</small></div><div class="b"><span class="chip" style="--c:#8E4FC0">AVE</span><p>Bato as asas bem rápido e bebo o néctar das flores!</p></div></div></button>
+    <button class="flip"><div class="in"><div class="f"><div class="a" data-art="borboleta"></div><h3>Borboleta</h3><small>clique em mim</small></div><div class="b"><span class="chip" style="--c:#2F6FB3">INSETO</span><p>Eu nasci lagarta e depois virei borboleta!</p></div></div></button>
+  </div>
+</section>
+
+<!-- FECHAMENTO -->
+<section class="slide end" data-theme="sea" data-steps="2">
+  <div class="paper card">Precisamos <b>respeitar</b> os bichos e <b>observá-los</b> sem machucá-los.</div>
+  <div class="rules rv" data-step="1">
+    <span class="chip">👀 Olhar de longe</span>
+    <span class="chip">✋ Não pegar</span>
+    <span class="chip">🗑️ Não jogar lixo</span>
+  </div>
+  <div class="thanks rv" data-step="2">Obrigada!</div>
+  <div class="duna" data-art="izadora"></div>
+</section>
+
+</div></div>
+
+<div id="start"><div class="box"><div class="t">Os bichos da <b>Duna Menina</b></div><button id="go">▶ Começar</button><div class="s">com música e sons 🎵</div></div></div>
+<div id="rot">📱 Vire o celular na horizontal para ver melhor</div>
+<nav id="bar" aria-label="Controles da apresentação">
+  <button id="prev" aria-label="Voltar">◀</button>
+  <div id="dots"></div>
+  <button id="next" aria-label="Avançar"><span class="lbl">Próximo </span>▶</button>
+  <button id="mus" aria-label="Música de fundo" aria-pressed="true" title="Música de fundo (M)">🎵</button>
+  <button id="snd" aria-label="Efeitos sonoros" title="Efeitos sonoros (S)">🔔</button>
+  <button id="fs" aria-label="Tela cheia" title="Tela cheia (F)">⛶</button>
+</nav>
+
+<script>
+/* =============== ARTE (SVG) =============== */
+const INK='#2B1B3D';
+function flower(x,y,s=1){return `<g transform="translate(${x} ${y}) scale(${s})"><g fill="#fff"><circle cx="0" cy="-8" r="7"/><circle cx="0" cy="8" r="7"/><circle cx="-8" cy="0" r="7"/><circle cx="8" cy="0" r="7"/></g><circle r="4" fill="#F2677A"/></g>`}
+function ant(x,y,rot,delay,leaf){return `<g transform="translate(${x} ${y}) rotate(${rot}) scale(1.25)"><g class="an-ant" style="animation-delay:${delay}s">
+  <g class="an-legs" stroke="${INK}" stroke-width="4" stroke-linecap="round" fill="none">
+   <path d="M-6 6 L-20 30M2 8 L2 32M10 6 L24 30"/><path d="M-6 -6 L-20 -30M2 -8 L2 -32M10 -6 L24 -30"/></g>
+  <ellipse cx="-32" cy="0" rx="28" ry="19" fill="${INK}"/><ellipse cx="-38" cy="-6" rx="10" ry="5" fill="#fff" opacity=".22"/>
+  <ellipse cx="2" cy="0" rx="15" ry="11" fill="${INK}"/>
+  <circle cx="28" cy="0" r="14" fill="${INK}"/><circle cx="34" cy="-4" r="3.4" fill="#F7C6B5"/>
+  <path d="M34 -9 q10 -22 28 -18M34 5 q10 12 28 8" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  ${leaf?`<path d="M-14 -14 q16 -40 46 -30 q-4 34 -46 30z" fill="#5DB36B"/><path d="M-12 -16 q14 -20 40 -26" stroke="#CFF0CF" stroke-width="2.5" fill="none"/>`:''}
+ </g></g>`}
+const ART={
+lagarto:()=>`<svg class="svgart" viewBox="30 130 380 240"><g class="lz-all">
+ <g class="lz-tail"><path d="M132 232 C 86 232 52 254 54 292 C 56 322 98 328 104 300 C 108 282 86 276 82 292" fill="none" stroke="#3B2A5E" stroke-width="17" stroke-linecap="round" stroke-linejoin="round"/></g>
+ <g stroke="#3B2A5E" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none">
+  <path d="M168 248 L156 290 L138 294"/><path d="M212 252 L222 292 L240 296"/><path d="M268 248 L260 288 L242 292"/><path d="M304 240 L322 280 L340 282"/></g>
+ <ellipse cx="215" cy="228" rx="106" ry="33" fill="#3B2A5E"/><ellipse cx="324" cy="222" rx="46" ry="29" fill="#3B2A5E"/>
+ <g fill="#B58AD6"><circle cx="160" cy="210" r="6"/><circle cx="190" cy="204" r="7"/><circle cx="222" cy="203" r="7"/><circle cx="254" cy="206" r="6"/><circle cx="284" cy="211" r="5"/></g>
+ <g fill="#fff" opacity=".55"><path d="M175 222l6 8-6 8-6-8z"/><path d="M215 224l6 8-6 8-6-8z"/><path d="M255 224l6 8-6 8-6-8z"/></g>
+ <circle cx="340" cy="212" r="10.5" fill="#E0453A"/><circle cx="343" cy="212" r="4.8" fill="#1d1230"/><circle cx="345" cy="210" r="1.9" fill="#fff"/>
+ <path class="lz-tongue" d="M368 228 q12 -7 22 1 q-8 4 -4 13" stroke="#F2677A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+</g></svg>`,
+coruja:()=>`<svg class="svgart" viewBox="0 0 400 400">
+ <path d="M6 330 C 110 305 250 342 396 298" stroke="#8D8AA0" stroke-width="36" fill="none" stroke-linecap="round"/>
+ <path d="M10 338 C 110 326 250 358 392 308" stroke="#6F6C86" stroke-width="8" fill="none" opacity=".55" stroke-linecap="round"/>
+ <g><ellipse cx="62" cy="288" rx="38" ry="25" transform="rotate(-18 62 288)" fill="#3E4DA8"/><path d="M34 292l56-14" stroke="#CFE3FF" stroke-width="3" stroke-linecap="round"/>
+ <ellipse cx="100" cy="258" rx="26" ry="18" transform="rotate(28 100 258)" fill="#4A4FB0"/><path d="M86 252l26 12" stroke="#CFE3FF" stroke-width="3" stroke-linecap="round"/></g>
+ <g stroke="#3E4DA8" stroke-width="10" stroke-linecap="round" fill="none"><path d="M175 322l-14 15M175 322v19M175 322l14 15M235 322l-14 15M235 322v19M235 322l14 15"/></g>
+ <ellipse cx="205" cy="228" rx="82" ry="106" fill="#8E4FC0"/>
+ <path d="M130 200C100 242 120 300 152 312 150 270 152 232 130 200Z" fill="#6B3A99"/><path d="M280 200C310 242 290 300 258 312 260 270 258 232 280 200Z" fill="#6B3A99"/>
+ <g stroke="#E3C9F6" stroke-width="3.2" fill="none" stroke-linecap="round">
+  <path d="M170 250q14-18 28 0q14-18 28 0q14-18 28 0"/><path d="M156 276q14-18 28 0q14-18 28 0q14-18 28 0q14-18 28 0"/><path d="M170 302q14-18 28 0q14-18 28 0q14-18 28 0"/></g>
+ <g class="ow-head">
+  <path d="M130 140L148 62 190 114Z" fill="#8E4FC0"/><path d="M280 140L262 62 220 114Z" fill="#8E4FC0"/>
+  <ellipse cx="205" cy="150" rx="84" ry="68" fill="#9D5FD0"/>
+  <g stroke="#E7D1F7" stroke-width="3" stroke-linecap="round"><path d="M205 96v26M184 98l4 24M226 98l-4 24"/></g>
+  <g class="ow-eyes">
+   <circle cx="167" cy="152" r="31" fill="#F7A5A0" stroke="#C0485B" stroke-width="4"/><circle cx="243" cy="152" r="31" fill="#F7A5A0" stroke="#C0485B" stroke-width="4"/>
+   <g stroke="#C0485B" stroke-width="2" opacity=".7"><path d="M167 124v56M139 152h56M147 132l40 40M187 132l-40 40"/><path d="M243 124v56M215 152h56M223 132l40 40M263 132l-40 40"/></g>
+   <circle cx="167" cy="152" r="12" fill="${INK}"/><circle cx="243" cy="152" r="12" fill="${INK}"/><circle cx="171" cy="147" r="4" fill="#fff"/><circle cx="247" cy="147" r="4" fill="#fff"/></g>
+  <path d="M193 172L217 172 205 200Z" fill="#F4A58F"/>
+ </g></svg>`,
+sagui:()=>`<svg class="svgart" viewBox="0 0 400 400">
+ <path d="M0 336 C 100 322 250 346 400 322" stroke="#C24E4A" stroke-width="32" fill="none" stroke-linecap="round"/>
+ <g class="sg-all">
+  <g class="sg-tail"><path d="M262 306 C 352 316 378 232 346 182 C 330 156 300 162 308 184" fill="none" stroke="#5A6CB0" stroke-width="20" stroke-linecap="round"/>
+   <path d="M262 306 C 352 316 378 232 346 182 C 330 156 300 162 308 184" fill="none" stroke="#2C2A4A" stroke-width="20" stroke-dasharray="10 17" stroke-linecap="butt"/></g>
+  <ellipse cx="200" cy="262" rx="72" ry="80" fill="#7F93C9"/>
+  <g stroke="#2C2A4A" stroke-width="3.5" fill="none" stroke-linejoin="round"><path d="M200 196l38 54-38 54-38-54z"/><path d="M200 220l22 30-22 30-22-30z"/><path d="M200 242l8 8-8 8-8-8z"/></g>
+  <g stroke="#2C2A4A" stroke-width="13" stroke-linecap="round" fill="none"><path d="M156 322q-8 16 6 16h30M244 322q8 16-6 16h-30"/></g>
+  <path d="M150 252 q-34 12 -34 -14" stroke="#5B6FB2" stroke-width="15" stroke-linecap="round" fill="none"/>
+  <circle cx="112" cy="226" r="19" fill="#F2B544"/><circle cx="106" cy="220" r="6" fill="#FFE29A" opacity=".8"/><path d="M114 207q8-14 22-12-2 14-22 12z" fill="#5DB36B"/>
+  <path d="M250 252 q30 6 24 28" stroke="#5B6FB2" stroke-width="15" stroke-linecap="round" fill="none"/>
+  <g stroke="#B8C4EA" stroke-width="3" stroke-linejoin="round"><ellipse cx="160" cy="128" rx="46" ry="22" transform="rotate(-32 160 128)" fill="#EEF2FF"/><ellipse cx="240" cy="128" rx="46" ry="22" transform="rotate(32 240 128)" fill="#EEF2FF"/></g>
+  <g stroke="#B8C4EA" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M128 112l-10 -6M124 124l-12 0M130 134l-10 6"/><path d="M272 112l10 -6M276 124l12 0M270 134l10 6"/></g>
+  <circle cx="200" cy="140" r="57" fill="#2C2A4A"/><ellipse cx="200" cy="152" rx="38" ry="33" fill="#8C9FD6"/>
+  <circle cx="184" cy="144" r="10" fill="#E0453A"/><circle cx="216" cy="144" r="10" fill="#E0453A"/><circle cx="184" cy="144" r="4.5" fill="#1d1230"/><circle cx="216" cy="144" r="4.5" fill="#1d1230"/>
+  <circle cx="187" cy="141" r="2" fill="#fff"/><circle cx="219" cy="141" r="2" fill="#fff"/>
+  <path d="M190 168q10 9 20 0" stroke="#2C2A4A" stroke-width="3.5" fill="none" stroke-linecap="round"/><ellipse cx="200" cy="158" rx="5" ry="3.4" fill="#2C2A4A"/>
+ </g></svg>`,
+timbu:()=>`<svg class="svgart" viewBox="0 0 400 400"><g class="tb-all">
+  <g class="tb-tail"><path d="M318 264 C 374 264 394 320 354 334 C 326 342 312 314 336 306" fill="none" stroke="#F29AB5" stroke-width="15" stroke-linecap="round"/></g>
+  <g stroke="#4A4458" stroke-width="20" stroke-linecap="round"><path d="M150 308v24M205 312v20M272 312v20M312 302v30"/></g>
+  <ellipse cx="236" cy="264" rx="108" ry="62" fill="#9C95AB"/>
+  <ellipse cx="248" cy="236" rx="78" ry="30" fill="#6E6781" opacity=".65"/>
+  <g stroke="#6E6781" stroke-width="3.5" stroke-linecap="round" fill="none" opacity=".8"><path d="M170 262l-8 12M196 272l-8 12M226 276l-8 12M256 274l-8 12M286 266l-8 12M312 252l-8 12"/></g>
+  <circle cx="120" cy="204" r="20" fill="#4A4458"/><circle cx="162" cy="208" r="20" fill="#4A4458"/><circle cx="120" cy="206" r="10" fill="#F0A0B8"/><circle cx="162" cy="210" r="10" fill="#F0A0B8"/>
+  <ellipse cx="136" cy="246" rx="54" ry="44" fill="#FFF1E6"/>
+  <path d="M104 246C80 250 56 262 42 280 70 288 108 288 132 276Z" fill="#FFF1E6"/>
+  <path d="M138 206Q134 226 124 242" stroke="#4A4458" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <circle cx="102" cy="238" r="13" fill="#E3B9A6"/><circle cx="100" cy="239" r="7" fill="${INK}"/><circle cx="102" cy="236" r="2.4" fill="#fff"/>
+  <circle class="tb-nose" cx="45" cy="279" r="8" fill="#F29AB5"/>
+  <g stroke="${INK}" stroke-width="2.2" stroke-linecap="round" opacity=".7"><path d="M62 272L22 260M62 278L20 282M64 284L30 302"/></g>
+ </g></svg>`,
+formiga:()=>`<svg class="svgart" viewBox="0 0 400 400">
+  <path class="an-trail" d="M30 340 C 150 340 230 290 380 120" fill="none" stroke="${INK}" stroke-width="7" stroke-dasharray="6 22" stroke-linecap="round" opacity=".55"/>
+  ${ant(112,298,-12,0,false)}${ant(222,238,-30,.18,true)}${ant(318,150,-52,.34,false)}
+</svg>`,
+tatu:()=>`<svg class="svgart" viewBox="0 0 400 400"><g class="tt-all">
+  <path d="M330 272C366 276 384 296 392 322" stroke="#B08E6C" stroke-width="13" fill="none" stroke-linecap="round"/>
+  <g stroke="#8A6A4A" stroke-width="17" stroke-linecap="round"><path d="M150 292v46M198 296v42M262 296v42M306 288v50"/></g>
+  <path d="M104 266C100 168 330 150 338 266Z" fill="#C9A27E"/>
+  <g stroke="#8A6A4A" stroke-width="5" fill="none" stroke-linecap="round"><path d="M150 262C152 220 170 196 196 178M190 262C190 220 204 190 226 172M232 262C230 218 240 190 258 172M274 262C272 222 280 196 296 182M310 262C310 232 312 214 318 200"/></g>
+  <g fill="#8A6A4A" opacity=".45"><circle cx="170" cy="236" r="4"/><circle cx="210" cy="220" r="4"/><circle cx="250" cy="218" r="4"/><circle cx="292" cy="228" r="4"/></g>
+  <ellipse cx="98" cy="272" rx="42" ry="27" fill="#D8B896"/>
+  <ellipse cx="124" cy="238" rx="11" ry="18" transform="rotate(20 124 238)" fill="#B08E6C"/>
+  <circle cx="84" cy="264" r="6.5" fill="${INK}"/><circle cx="86" cy="262" r="2" fill="#fff"/><circle cx="58" cy="282" r="7" fill="#F29AB5"/>
+ </g></svg>`,
+beijaflor:()=>`<svg class="svgart" viewBox="0 0 400 400"><g class="bf-all">
+  <g transform="translate(34 150)"><g fill="#E0453A"><circle cx="0" cy="-20" r="17"/><circle cx="0" cy="20" r="17"/><circle cx="-20" cy="0" r="17"/><circle cx="20" cy="0" r="17"/></g><circle r="11" fill="#F2B544"/></g>
+  <path d="M34 190q-4 70 30 110" stroke="#5DB36B" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M258 252L336 308 304 264 346 276 292 236Z" fill="#1E7F6E"/>
+  <ellipse cx="215" cy="218" rx="64" ry="38" transform="rotate(28 215 218)" fill="#2FB39A"/>
+  <ellipse cx="190" cy="236" rx="40" ry="22" transform="rotate(28 190 236)" fill="#F2677A"/>
+  <g class="bf-wing" opacity=".75"><path d="M222 196C196 110 140 70 96 80 126 128 168 170 222 196Z" fill="#8EE0D0" stroke="#3FB79F" stroke-width="3"/></g>
+  <g class="bf-wing" style="animation-delay:.06s"><path d="M236 204C230 120 192 70 150 64 164 120 196 170 236 204Z" fill="#B7F0E4" stroke="#3FB79F" stroke-width="3"/></g>
+  <circle cx="160" cy="182" r="31" fill="#1E9C86"/><circle cx="150" cy="174" r="5.5" fill="${INK}"/><circle cx="152" cy="172" r="1.8" fill="#fff"/>
+  <path d="M134 178L66 150" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
+ </g></svg>`,
+borboleta:()=>`<svg class="svgart" viewBox="0 0 400 400"><g class="bt-all">
+  <g class="bt-wl"><path d="M198 200C120 70 36 104 66 188 82 232 160 234 198 200Z" fill="#F2B544" stroke="${INK}" stroke-width="4"/><path d="M198 208C128 230 84 300 136 322 184 334 206 262 198 208Z" fill="#E9733F" stroke="${INK}" stroke-width="4"/>
+   <circle cx="108" cy="170" r="14" fill="#fff"/><circle cx="108" cy="170" r="7" fill="${INK}"/><circle cx="150" cy="282" r="11" fill="#FFE29A"/></g>
+  <g class="bt-wr"><g transform="translate(400 0) scale(-1 1)"><path d="M198 200C120 70 36 104 66 188 82 232 160 234 198 200Z" fill="#F2B544" stroke="${INK}" stroke-width="4"/><path d="M198 208C128 230 84 300 136 322 184 334 206 262 198 208Z" fill="#E9733F" stroke="${INK}" stroke-width="4"/>
+   <circle cx="108" cy="170" r="14" fill="#fff"/><circle cx="108" cy="170" r="7" fill="${INK}"/><circle cx="150" cy="282" r="11" fill="#FFE29A"/></g></g>
+  <ellipse cx="200" cy="224" rx="10" ry="56" fill="${INK}"/><circle cx="200" cy="160" r="13" fill="${INK}"/>
+  <path d="M194 150Q180 112 156 104M206 150Q220 112 244 104" stroke="${INK}" stroke-width="4" fill="none" stroke-linecap="round"/>
+ </g></svg>`,
+izadora:()=>`<svg class="svgart" viewBox="0 0 300 420"><g class="dn-all">
+  <path d="M94 160C88 76 134 46 150 46S212 76 206 160C218 214 224 262 216 304C190 316 110 316 84 304C76 262 82 214 94 160Z" fill="#3B2B24"/>
+  <g stroke="#5A4235" stroke-width="3.5" fill="none" stroke-linecap="round" opacity=".75"><path d="M100 224q-4 38 4 66M200 224q4 38-4 66M116 298q34 10 68 0"/></g>
+  <ellipse cx="127" cy="410" rx="17" ry="7" fill="#fff" stroke="#C9BFD6" stroke-width="3"/><ellipse cx="173" cy="410" rx="17" ry="7" fill="#fff" stroke="#C9BFD6" stroke-width="3"/>
+  <path d="M106 322H194L192 404H156L150 354L144 404H108Z" fill="#1E8F4A" stroke="#17703A" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M118 240C130 234 170 234 182 240L202 330H98Z" fill="#fff" stroke="#D9D2E3" stroke-width="3"/>
+  <path d="M112 260q-34 14-44 52" stroke="#E0A27C" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="66" cy="316" r="8" fill="#E0A27C"/>
+  <ellipse cx="116" cy="254" rx="13" ry="12" fill="#fff" stroke="#D9D2E3" stroke-width="3"/>
+  <rect x="138" y="210" width="24" height="32" rx="8" fill="#D9936F"/>
+  <path d="M134 236L150 276 166 236Z" fill="#E0A27C"/>
+  <path d="M134 236L150 276 166 236" stroke="#1E8F4A" stroke-width="6" fill="none" stroke-linejoin="round"/>
+  <path d="M140 236L150 266 160 236" stroke="#F28C28" stroke-width="2.6" fill="none" stroke-linejoin="round"/>
+  <g class="dn-arm"><path d="M188 260q36-4 52-46" stroke="#E0A27C" stroke-width="11" stroke-linecap="round" fill="none"/><circle cx="242" cy="208" r="8" fill="#E0A27C"/>
+   <ellipse cx="184" cy="254" rx="13" ry="12" fill="#fff" stroke="#D9D2E3" stroke-width="3"/></g>
+  <ellipse cx="150" cy="162" rx="50" ry="62" fill="#E3A67F"/>
+  <circle cx="116" cy="190" r="11" fill="#F0968A" opacity=".55"/><circle cx="184" cy="190" r="11" fill="#F0968A" opacity=".55"/>
+  <path d="M100 156C94 78 130 52 150 52S206 78 200 156C192 122 174 100 150 98C126 100 108 122 100 156Z" fill="#3B2B24"/>
+  <path d="M150 54V98" stroke="#6A5043" stroke-width="3" stroke-linecap="round"/>
+  <path d="M120 148q11-8 22-2M158 146q11-6 22 2" stroke="#3B2B24" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="130" cy="166" rx="8.5" ry="11" fill="#2B1B3D"/><ellipse cx="170" cy="166" rx="8.5" ry="11" fill="#2B1B3D"/>
+  <circle cx="133" cy="161" r="3" fill="#fff"/><circle cx="173" cy="161" r="3" fill="#fff"/>
+  <path d="M119 161q11-11 22 0M159 161q11-11 22 0" stroke="#2B1B3D" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M146 186q4 4 8 0" stroke="#C9805F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M138 207q12 10 24 0" stroke="#B5573F" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+  <g transform="translate(192 84)" stroke="#D9487A" stroke-width="2.5">
+   <g fill="#F7739A"><circle cx="17" cy="0" r="12"/><circle cx="5" cy="16" r="12"/><circle cx="-14" cy="10" r="12"/><circle cx="-14" cy="-10" r="12"/><circle cx="5" cy="-16" r="12"/></g>
+   <circle r="9" fill="#FFD45E" stroke="#E0A52C"/></g>
+ </g></svg>`,
+duna:()=>`<svg class="svgart" viewBox="0 0 300 420"><g class="dn-all">
+  <path d="M150 38C62 28 18 112 40 192 54 248 22 290 42 332 70 300 92 270 112 250H188C212 280 236 310 262 332 282 286 246 250 260 192 284 112 238 30 150 38Z" fill="#17121F"/>
+  <g stroke="#17121F" stroke-width="15" fill="none" stroke-linecap="round"><path d="M42 332q-26 20-6 40 22 10 26-12"/><path d="M262 332q26 20 6 40-22 10-26-12"/><path d="M46 120q-30-14-24-44"/><path d="M256 110q32-14 24-46"/></g>
+  <path d="M120 226h60l56 150H64Z" fill="#5A8F95"/>
+  ${flower(112,300)}${flower(166,330,1.1)}${flower(196,286)}${flower(138,268,.9)}${flower(100,352,.9)}${flower(210,350,.9)}
+  <path d="M122 242q-52 18-72 56" stroke="#E9856A" stroke-width="15" stroke-linecap="round" fill="none"/>
+  <g class="dn-arm"><path d="M180 242q52 -6 74 -52" stroke="#E9856A" stroke-width="15" stroke-linecap="round" fill="none"/></g>
+  <g stroke="#E9856A" stroke-width="14" stroke-linecap="round"><path d="M120 374v34M182 374v34"/></g>
+  <ellipse cx="150" cy="160" rx="63" ry="69" fill="#E9856A"/>
+  <circle cx="108" cy="188" r="15" fill="#F4B3A0" opacity=".85"/><circle cx="192" cy="188" r="15" fill="#F4B3A0" opacity=".85"/>
+  <ellipse cx="124" cy="160" rx="12" ry="10" fill="#fff"/><ellipse cx="176" cy="160" rx="12" ry="10" fill="#fff"/>
+  <circle cx="127" cy="161" r="6.5" fill="${INK}"/><circle cx="179" cy="161" r="6.5" fill="${INK}"/><circle cx="129" cy="158" r="2" fill="#fff"/><circle cx="181" cy="158" r="2" fill="#fff"/>
+  <path d="M143 182q3 4 7 0q4 4 7 0" stroke="#B85A44" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <path d="M130 206q20 14 40 0" stroke="${INK}" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <path d="M196 92q18-18 36-8-8 22-36 8z" fill="#7FD6A0"/>
+ </g></svg>`
+};
+
+/* =============== DADOS DOS ANIMAIS =============== */
+const ANIMALS=[
+ {name:'Lagarto',sub:'(calango)',theme:'sky',color:'#3E8E6B',art:'lagarto',group:'Eu sou um <b>RÉPTIL</b>',
+  home:'Moro nas dunas, tomando sol',food:'Como insetinhos',
+  fun:'Minha cauda solta se alguém me pega… e cresce de novo!',book:'Eu fujo correndo e levo Duna até o bosque!'},
+ {name:'Coruja',sub:'(caburé)',theme:'peach',color:'#8E4FC0',art:'coruja',group:'Eu sou uma <b>AVE</b>',
+  home:'Moro nas árvores do bosque',food:'Como insetos e bichinhos pequenos',
+  fun:'Sou bem pequenininha, mas também caço de dia!',book:'Eu espero a hora certa para falar com Duna.'},
+ {name:'Sagui',sub:'',theme:'sunset',color:'#D2693E',art:'sagui',group:'Eu sou um <b>MAMÍFERO</b>',
+  home:'Moro nas árvores, em bando',food:'Como frutas, insetos e goma de árvore',
+  fun:'Tenho tufos brancos nas orelhas e uma cauda bem comprida!',book:'Jogo cascas de fruta e levo o lacinho de Duna. Hihihi!'},
+ {name:'Timbu',sub:'(gambá)',theme:'night',color:'#D2693E',art:'timbu',group:'Eu sou um <b>MAMÍFERO</b>',
+  home:'Moro em tocas e árvores. Saio à noite!',food:'Como frutas e insetos',
+  fun:'Minha mamãe carrega os filhotes numa bolsinha na barriga!',book:'Eu cuido de Duna enquanto ela dorme.'},
+ {name:'Formiga',sub:'',theme:'cream',color:'#2F6FB3',art:'formiga',group:'Eu sou um <b>INSETO</b> · 6 patinhas!',
+  home:'Moro no formigueiro, com muitas amigas',food:'Como folhinhas e migalhas',
+  fun:'Ando em fila, seguindo um cheirinho, e carrego coisas bem pesadas!',book:'Eu mostro o caminho para Duna achar o lacinho.'}
+];
+const animalHTML=ANIMALS.map(a=>`<section class="slide animal" data-theme="${a.theme}" data-steps="3">
+ <div class="art-wrap"><div class="ring"></div><div class="art" data-art="${a.art}"></div></div>
+ <div class="info">
+  <h2 class="title">${a.name}${a.sub?` <small>${a.sub}</small>`:''}</h2>
+  <div class="chip rv" data-step="1" style="--c:${a.color}">${a.group}</div>
+  <div class="facts paper rv" data-step="2"><p><span class="ic">🏠</span>${a.home}</p><p><span class="ic">🍽️</span>${a.food}</p></div>
+  <div class="fun paper rv" data-step="3"><span class="ic">⭐</span><p>${a.fun}</p></div>
+ </div>
+ <div class="book paper"><span>📖</span><b>No livro:</b> ${a.book}</div>
+</section>`).join('');
+document.getElementById('stage').innerHTML=document.getElementById('stage').innerHTML.replace('<!--ANIMAIS-->',animalHTML);
+
+/* injeta as ilustrações */
+document.querySelectorAll('[data-art]').forEach(el=>{el.innerHTML=ART[el.dataset.art]()});
+
+/* folhas e estrelas decorativas */
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+const LEAFC=['#4B4FA8','#6A4C9C','#3C7C9E','#8A5A9E','#2F7F86'];
+function leaf(c){return `<svg viewBox="0 0 60 80"><ellipse cx="30" cy="40" rx="26" ry="36" fill="${c}"/><path d="M30 70V20M30 55L14 40M30 55L46 40M30 40L18 28M30 40L42 28" stroke="#CFE3FF" stroke-width="3" fill="none" stroke-linecap="round"/></svg>`}
+document.querySelectorAll('.slide').forEach(s=>{
+  const th=s.dataset.theme, light=th==='cream';
+  const n=th==='night'?5:11;
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div'); d.className='leaf';
+    const size=44+rnd()*70, r=Math.round(rnd()*120-60);
+    const edge=rnd();
+    let x,y; if(edge<.5){x=rnd()*1280;y=rnd()<.5?-20+rnd()*60:660+rnd()*40}else{x=rnd()<.5?-20+rnd()*50:1250+rnd()*30;y=rnd()*700}
+    d.style.cssText=`left:${x}px;top:${y}px;width:${size}px;height:${size*1.3}px;--r:${r}deg;opacity:${light?.55:.9};animation-delay:${-rnd()*5}s`;
+    d.innerHTML=leaf(LEAFC[i%LEAFC.length]); s.appendChild(d);
+  }
+  if(th==='night'){for(let i=0;i<26;i++){const st=document.createElement('div');st.className='star';st.textContent='✦';
+    st.style.cssText=`left:${rnd()*1260}px;top:${rnd()*700}px;font-size:${10+rnd()*20}px;animation-delay:${-rnd()*3}s`;s.appendChild(st)}}
+});
+
+/* =============== NAVEGAÇÃO =============== */
+const stage=document.getElementById('stage');
+const slides=[...document.querySelectorAll('.slide')];
+const dotsEl=document.getElementById('dots');
+slides.forEach((_,i)=>{const d=document.createElement('i');d.title='Slide '+(i+1);d.onclick=()=>{cur=i;step=0;render()};dotsEl.appendChild(d)});
+let cur=0,step=0,soundOn=true,ctx=null,started=false;
+const maxStep=s=>+s.dataset.steps||0;
+const hash=parseInt(location.hash.slice(1),10); if(hash>=1&&hash<=slides.length) cur=hash-1;
+
+function pop(){
+  if(!soundOn) return;
+  try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime;
+    o.type='sine';o.frequency.setValueAtTime(520,t);o.frequency.exponentialRampToValueAtTime(900,t+.09);
+    g.gain.setValueAtTime(.16,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);
+    o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.22);}catch(e){}
+}
+function confetti(){
+  const s=slides[cur], E=['⭐','🌟','✨','🍃','💜','🧡'];
+  for(let i=0;i<46;i++){const c=document.createElement('div');c.className='confetti';c.textContent=E[i%E.length];
+    c.style.left=Math.random()*1240+'px';c.style.animationDuration=(2.6+Math.random()*2.6)+'s';c.style.animationDelay=(Math.random()*.9)+'s';
+    s.appendChild(c);setTimeout(()=>c.remove(),7000)}
+}
+function render(){
+  slides.forEach((s,i)=>{s.classList.toggle('active',i===cur);s.classList.toggle('past',i<cur)});
+  slides[cur].querySelectorAll('[data-step]').forEach(e=>e.classList.toggle('on',+e.dataset.step<=step));
+  [...dotsEl.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
+  try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
+}
+function next(){
+  if(step<maxStep(slides[cur])){step++;pop();render();if(slides[cur].classList.contains('end')&&step===maxStep(slides[cur]))confetti();}
+  else if(cur<slides.length-1){cur++;step=0;pop();render();}
+}
+function prev(){
+  if(step>0){step--;}
+  else if(cur>0){cur--;step=maxStep(slides[cur]);}
+  render();
+}
+function fit(){
+  const vw=innerWidth,vh=innerHeight-68;
+  const s=Math.min(vw/1280,vh/720);
+  stage.style.transform=`translate(-50%,-50%) scale(${s})`;
+  const bar=document.getElementById('bar');
+  bar.classList.remove('nodots','nolbl');
+  if(bar.scrollWidth>bar.clientWidth+1)bar.classList.add('nodots');
+  if(bar.scrollWidth>bar.clientWidth+1)bar.classList.add('nolbl');
+}
+addEventListener('resize',fit);fit();
+document.getElementById('next').onclick=next;
+document.getElementById('prev').onclick=prev;
+document.getElementById('fs').onclick=()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.()};
+const snd=document.getElementById('snd');
+snd.onclick=()=>{soundOn=!soundOn;snd.textContent=soundOn?'🔔':'🔕';pop()};
+
+/* música de fundo: caixinha de música gerada no navegador (sem arquivos) */
+const mus=document.getElementById('mus');
+const EIGHTH=.3, LOOP=32*EIGHTH;
+const MEL=[659,0,784,0,659,587,523,0, 523,0,659,0,440,0,523,0, 440,523,587,523,440,0,392,0, 587,0,659,587,523,0,0,0];
+const CHORD=[[130.81,196,261.63,196],[110,164.81,220,164.81],[87.31,130.81,174.61,130.81],[98,146.83,196,146.83]];
+let musicOn=true,musicTimer=null,master=null;
+/* os navegadores só liberam som depois de um toque: a tela inicial cumpre esse papel */
+function begin(){
+  if(started)return;started=true;
+  document.getElementById('start').classList.add('hide');
+  try{if(musicOn)startMusic();else if(soundOn){ctx=ctx||new (window.AudioContext||window.webkitAudioContext)()}}catch(e){}
+}
+document.getElementById('go').onclick=begin;
+document.getElementById('go').focus();
+function note(t,f,vol,type,len,dest){
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type=type;o.frequency.value=f;
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+.015);g.gain.exponentialRampToValueAtTime(.0001,t+len);
+  o.connect(g);g.connect(dest);o.start(t);o.stop(t+len+.05);
+}
+function scheduleLoop(t0){
+  for(let i=0;i<32;i++){
+    const f=MEL[i];if(!f)continue;
+    note(t0+i*EIGHTH,f,.2,'sine',1.1,master);
+    note(t0+i*EIGHTH,f*2,.05,'sine',.6,master);
+  }
+  for(let b=0;b<4;b++)for(let q=0;q<4;q++)note(t0+(b*8+q*2)*EIGHTH,CHORD[b][q],.3,'triangle',.55,master);
+}
+function startMusic(){
+  ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();
+  ctx.resume&&ctx.resume();
+  master=ctx.createGain();master.gain.value=.45;master.connect(ctx.destination);
+  let t=ctx.currentTime+.1;
+  const tick=()=>{scheduleLoop(t);t+=LOOP;musicTimer=setTimeout(tick,Math.max(200,(t-ctx.currentTime-1)*1000))};
+  tick();
+}
+function stopMusic(){
+  clearTimeout(musicTimer);
+  if(!master)return;
+  const m=master;m.gain.cancelScheduledValues(0);m.gain.setTargetAtTime(0,ctx.currentTime,.12);
+  setTimeout(()=>m.disconnect(),700);master=null;
+}
+mus.onclick=()=>{
+  musicOn=!musicOn;
+  try{musicOn?startMusic():stopMusic()}catch(e){musicOn=false}
+  mus.classList.toggle('off',!musicOn);mus.setAttribute('aria-pressed',musicOn);
+};
+document.addEventListener('visibilitychange',()=>{if(!ctx)return;document.hidden?ctx.suspend():(musicOn||soundOn)&&ctx.resume()});
+stage.addEventListener('click',e=>{if(e.target.closest('.flip'))return;next()});
+document.querySelectorAll('.flip').forEach(f=>f.addEventListener('click',()=>{f.classList.toggle('on');pop()}));
+addEventListener('keydown',e=>{
+  const k=e.key;
+  if(!started){if(k==='Enter'||k===' '){e.preventDefault();begin()}return}
+  if(k==='ArrowRight'||k==='PageDown'||k==='Enter'||(k===' '&&!e.target.closest('.flip'))){e.preventDefault();next()}
+  else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'){e.preventDefault();prev()}
+  else if(k==='Home'){cur=0;step=0;render()}
+  else if(k==='End'){cur=slides.length-1;step=0;render()}
+  else if(k==='f'||k==='F'){document.getElementById('fs').click()}
+  else if(k==='m'||k==='M'){mus.click()}
+  else if(k==='s'||k==='S'){snd.click()}
+});
+let tx=0;
+stage.addEventListener('touchstart',e=>{tx=e.changedTouches[0].clientX},{passive:true});
+stage.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>60){dx<0?next():prev()}},{passive:true});
+render();
+</script>
+</body>
+</html>
