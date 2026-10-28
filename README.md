@@ -6,6 +6,7 @@ Apresentação de seminário da Izadora (2º ano) sobre os animais do livro
 - Abre direto no navegador, sem instalar nada: `index.html`.
 - Toque em **Começar** na primeira tela (é isso que libera o som no navegador).
 - Setas do teclado, toque na tela ou botões na parte de baixo para avançar.
+- No último slide, depois que o confete termina de cair, aparece o botão **Recomeçar**.
 - `F` = tela cheia, `M` = liga/desliga a música, `S` = liga/desliga os efeitos.
 - Música e efeitos vêm ligados. A música é gerada no próprio navegador, sem arquivos de áudio.
 - No celular, use na horizontal.
