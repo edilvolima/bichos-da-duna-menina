@@ -181,6 +181,10 @@ html,body{margin:0;height:100%;background:#2B1B3D;overflow:hidden;font-family:va
 .end .thanks{position:absolute;left:60px;top:560px;width:780px;text-align:center;font-family:var(--display);font-size:118px;line-height:1;color:var(--paper);text-shadow:0 7px 0 rgba(43,27,61,.35)}
 .end .duna{position:absolute;right:50px;top:90px;width:360px;height:520px}
 .end .pal{position:absolute;width:150px;height:150px}
+#restart{position:absolute;right:70px;top:628px;font-family:var(--display);font-size:42px;line-height:1;color:#fff;background:#E0653F;border:0;border-radius:999px;padding:8px 34px 12px;cursor:pointer;box-shadow:0 7px 0 #8f3a20;opacity:0;transform:translateY(20px) scale(.9);pointer-events:none;transition:opacity .5s,transform .6s cubic-bezier(.2,1.5,.4,1)}
+#restart.show{opacity:1;transform:none;pointer-events:auto}
+#restart:active{transform:translateY(4px);box-shadow:0 3px 0 #8f3a20}
+#restart:focus-visible{outline:5px solid #FFE9A8;outline-offset:6px}
 .confetti{position:absolute;top:-60px;z-index:5;font-size:40px;animation:fall linear forwards;pointer-events:none}
 @keyframes fall{to{transform:translateY(820px) rotate(540deg)}}
 
@@ -226,7 +230,7 @@ html,body{margin:0;height:100%;background:#2B1B3D;overflow:hidden;font-family:va
 <section class="slide cover" data-theme="cream" data-steps="0">
   <div class="kicker title" style="position:absolute">OS BICHOS DA</div>
   <div class="big">DUNA<span>MENINA</span></div>
-  <div class="sub">do livro de Gabriela Barbalho<b>Apresentação: Izadora</b></div>
+  <div class="sub">do livro de Gabriela Barbalho</div>
   <div class="duna" data-art="izadora"></div>
   <div class="paper bubble">Oi! Eu sou a <b>Izadora</b>!</div>
   <div class="peek" style="left:700px;top:560px;width:130px;height:130px" data-art="lagarto"></div>
@@ -251,7 +255,7 @@ html,body{margin:0;height:100%;background:#2B1B3D;overflow:hidden;font-family:va
   <div class="line"><span>Duna encontra 5 bichos pelo caminho!</span></div>
   <div class="row">
     <div class="mini" style="--i:0"><div class="a" data-art="lagarto"></div><p>Lagarto</p></div>
-    <div class="mini" style="--i:1"><div class="a" data-art="coruja"></div><p>Coruja</p></div>
+    <div class="mini" style="--i:1"><div class="a" data-art="coruja"></div><p>Caboré</p></div>
     <div class="mini" style="--i:2"><div class="a" data-art="sagui"></div><p>Sagui</p></div>
     <div class="mini" style="--i:3"><div class="a" data-art="timbu"></div><p>Timbu</p></div>
     <div class="mini" style="--i:4"><div class="a" data-art="formiga"></div><p>Formiga</p></div>
@@ -294,6 +298,7 @@ html,body{margin:0;height:100%;background:#2B1B3D;overflow:hidden;font-family:va
   </div>
   <div class="thanks rv" data-step="2">Obrigada!</div>
   <div class="duna" data-art="izadora"></div>
+  <button id="restart" type="button">↻ Recomeçar</button>
 </section>
 
 </div></div>
@@ -469,7 +474,7 @@ const ANIMALS=[
  {name:'Lagarto',sub:'(calango)',theme:'sky',color:'#3E8E6B',art:'lagarto',group:'Eu sou um <b>RÉPTIL</b>',
   home:'Moro nas dunas, tomando sol',food:'Como insetinhos',
   fun:'Minha cauda solta se alguém me pega… e cresce de novo!',book:'Eu fujo correndo e levo Duna até o bosque!'},
- {name:'Coruja',sub:'(caburé)',theme:'peach',color:'#8E4FC0',art:'coruja',group:'Eu sou uma <b>AVE</b>',
+ {name:'Coruja',sub:'(caboré)',theme:'peach',color:'#8E4FC0',art:'coruja',group:'Eu sou uma <b>AVE</b>',
   home:'Moro nas árvores do bosque',food:'Como insetos e bichinhos pequenos',
   fun:'Sou bem pequenininha, mas também caço de dia!',book:'Eu espero a hora certa para falar com Duna.'},
  {name:'Sagui',sub:'',theme:'sunset',color:'#D2693E',art:'sagui',group:'Eu sou um <b>MAMÍFERO</b>',
@@ -538,16 +543,29 @@ function confetti(){
   for(let i=0;i<46;i++){const c=document.createElement('div');c.className='confetti';c.textContent=E[i%E.length];
     c.style.left=Math.random()*1240+'px';c.style.animationDuration=(2.6+Math.random()*2.6)+'s';c.style.animationDelay=(Math.random()*.9)+'s';
     s.appendChild(c);setTimeout(()=>c.remove(),7000)}
+  /* o botão Recomeçar aparece quando o último confete termina de cair */
+  clearTimeout(restartTimer);
+  restartTimer=setTimeout(()=>{if(s.classList.contains('end')&&s.classList.contains('active')&&step===maxStep(s))restartBtn.classList.add('show')},6400);
 }
+const restartBtn=document.getElementById('restart');
+let restartTimer=null;
+function restart(){
+  clearTimeout(restartTimer);restartBtn.classList.remove('show');
+  document.querySelectorAll('.flip.on').forEach(f=>f.classList.remove('on'));
+  cur=0;step=0;render();
+}
+restartBtn.addEventListener('click',e=>{e.stopPropagation();pop();restart()});
 function render(){
   slides.forEach((s,i)=>{s.classList.toggle('active',i===cur);s.classList.toggle('past',i<cur)});
   slides[cur].querySelectorAll('[data-step]').forEach(e=>e.classList.toggle('on',+e.dataset.step<=step));
   [...dotsEl.children].forEach((d,i)=>d.classList.toggle('on',i===cur));
+  if(!(slides[cur].classList.contains('end')&&step===maxStep(slides[cur]))){clearTimeout(restartTimer);restartBtn.classList.remove('show')}
   try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
 }
 function next(){
   if(step<maxStep(slides[cur])){step++;pop();render();if(slides[cur].classList.contains('end')&&step===maxStep(slides[cur]))confetti();}
   else if(cur<slides.length-1){cur++;step=0;pop();render();}
+  else if(restartBtn.classList.contains('show'))restart();
 }
 function prev(){
   if(step>0){step--;}
